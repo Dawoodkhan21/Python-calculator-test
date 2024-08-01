@@ -1,0 +1,38 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/Dawoodkhan21/Python-calculator-test.git'
+            }
+        }
+
+        stage('Setup') {
+            steps {
+                sh '''
+                    python3 -m venv venv
+                    . venv/bin/activate
+                    pip install --upgrade pip
+                    pip install pytest
+                '''
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh '''
+                    . venv/bin/activate
+                    pytest
+                '''
+            }
+        }
+
+    }
+
+    post {
+        always {
+            sh 'deactivate || true'
+        }
+    }
+}
